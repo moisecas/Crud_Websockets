@@ -1,5 +1,6 @@
 body{
-    background: goldenrod;  
+    background: goldenrod;
+    height: 100vh;  
 }
 h1{
     text-align: center;
