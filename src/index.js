@@ -36,7 +36,7 @@ io.on('connection', (socket)=>{ // socket? si.. cada vez que se haga una conexi√
         io.emit('server:newnote', producto) 
     }) //cuando escuches el evento client:newnote voy a hacer algo, el servidor escucha ese evento enviado desde el index, lado del cliente
 
-    socket.on('client:deletenote', noteId =>{
+    socket.on('client:deletenote', (noteId) =>{
        productos = productos.filter((note)=>note.id !== noteId) //funci√≥n que filtra un dato, filter, por cada producto recorrido haga, is es distinta a la que esta pasadno
        io.emit('server:loadnotes', productos)  //io para que se muestre en tiempo real 
     })
