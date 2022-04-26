@@ -19,11 +19,16 @@ noteForm.addEventListener('submit', e =>{ //cuando se envíe ese formulario vas 
         description.value
     ) //confirmar x el inspector que se este dando el evento
     
-    saveNote(title.value, description.value) 
+    if(saveID){
+        updateNote(saveID,title.value, description.value);
+    }else{
+        saveNote(title.value, description.value) 
+    }
     
     //reciendo los datos del backend para mostrar al cliente
-
-})
+    title.value = ""
+    description.value = "" //para limpiar los input al guardar los productos 
+}); 
 
 
 

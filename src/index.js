@@ -3,7 +3,7 @@ import {Server as WebSocketServer} from "socket.io"
 import http from "http" 
 import {v4 as uuid} from 'uuid' //para darle a cada producto un id
 
-const productos = []
+let productos = [] //let porque la voy a estar actualizando 
 
 //ya tengo un modulo de servidor que usa la configuración de express 
 const app = express() //por acá podemos generar la  conexión a la base de datos
@@ -33,8 +33,29 @@ io.on('connection', (socket)=>{ // socket? si.. cada vez que se haga una conexi�
         productos.push(producto)  //inserto la data de newnote al arreglo 
         console.log(productos)  //muestro por consola
         //al cliente le vas a emitir por pantalla los productos, emit
-        socket.emit('server:newnote', producto) 
+        io.emit('server:newnote', producto) 
     }) //cuando escuches el evento client:newnote voy a hacer algo, el servidor escucha ese evento enviado desde el index, lado del cliente
+
+    socket.on('client:deletenote', noteId =>{
+       productos = productos.filter((note)=>note.id !== noteId) //función que filtra un dato, filter, por cada producto recorrido haga, is es distinta a la que esta pasadno
+       io.emit('server:loadnotes', productos)  //io para que se muestre en tiempo real 
+    })
+    socket.on('client:getnote', noteId => {
+        const note = productos.find(note => note.id === noteId)
+        socket.emit('server:selectednote', note)//mostrando datos al cliente 
+    })//cuando de los sockets escuches el evento que viene desde el cliente y viene con el id, muestra
+
+    socket.on('client:updatenote', (updateNote) =>{
+        productos=productos.map(note => {
+            if(note.id === updateNote.id){
+                note.title=updateNote.title
+                note.description=updateNote.description 
+            }
+            return note 
+        })
+        io.emit("server:loadnotes", productos) 
+        
+    })
 
 })
 
